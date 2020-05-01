@@ -1,0 +1,10 @@
+namespace zMovies.Web.Contracts.V1.RequestDTOs
+{
+    public class CreateRatingRequest
+    {
+        public int Uid { get; set; }
+        public int Value { get; set; }
+        public string Review { get; set; }
+        public int MovieId { get; set; }
+    }
+}
