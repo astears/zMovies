@@ -18,6 +18,8 @@ using zMovies.Core.Entities;
 using zMovies.Infrastructure.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace Web
 {
@@ -43,7 +45,15 @@ namespace Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddCors();
 
-            services.AddSwaggerGen(option => option.SwaggerDoc("v1", new OpenApiInfo{ Title  = "zMovies API", Version = "v1"}));
+            services.AddSwaggerGen(option => {
+
+                option.SwaggerDoc("v1", new OpenApiInfo{ Title  = "zMovies API", Version = "v1"});
+                
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                option.IncludeXmlComments(xmlPath);
+            });
 
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
             services.AddScoped<IGenericRepository<Rating>, GenericRepository<Rating>>();
