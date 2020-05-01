@@ -45,20 +45,5 @@ namespace zMovies.Infrastructure.Repositories
         {
             return await this.context.MovieRatings.FirstOrDefaultAsync(mr => mr.MovieId == movieId && mr.UserId == uid);
         }
-
-
-        public new async Task<MovieRating> Update(MovieRating movieRating)
-         {
-            MovieRating movieRatingToDelete = await this.GetById(movieRating.UserId, movieRating.MovieId);
-
-            if (movieRatingToDelete == null)
-                return null;
-            
-            // Have to delete in order to modify a PK value; Ef Core restriction
-            await Delete(movieRatingToDelete);
-            movieRating = await this.Add(movieRating);
-
-            return movieRating;
-        }
     }
 }

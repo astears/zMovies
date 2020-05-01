@@ -85,22 +85,18 @@ namespace Movies.Web.Controllers
     {
         User user = await this.users.GetById(request.Uid);
         Rating rating = await this.ratingValues.GetByValue(request.Value);
-
+        MovieRating ratingToUpdate = await this.movieRatings.GetById(request.Uid, request.MovieId);
+        
+        if (ratingToUpdate == null) { return BadRequest(new { error = "Movie rating does not exist" }); }
         if (user == null) { return BadRequest(new { error = "Invalid uid" }); }
         if (rating == null) { return BadRequest(new { error = "Invalid Rating Value" }); }
-        
-        MovieRating updatedRating = new MovieRating {
-          UserId = user.Id,
-          MovieId = request.MovieId,
-          RatingId = rating.Id,
-          Review = request.Review
-        };
 
-        updatedRating = await this.movieRatings.Update(updatedRating);
-        
-        if (updatedRating == null) { return BadRequest(new { error = "Movie rating does not exist" }); }
+        ratingToUpdate.RatingId = rating.Id;
+        ratingToUpdate.Review = request.Review;
 
-        MovieRatingResponse response = this.mapper.Map<MovieRatingResponse>(updatedRating);
+        ratingToUpdate = await this.movieRatings.Update(ratingToUpdate);
+
+        MovieRatingResponse response = this.mapper.Map<MovieRatingResponse>(ratingToUpdate);
 
         return Ok(response);
     }

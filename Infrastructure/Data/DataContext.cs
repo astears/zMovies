@@ -26,7 +26,7 @@ namespace zMovies.Infrastructure.Data
 
             // Many to Many relationship for MovieRating
             modelBuilder.Entity<MovieRating>()
-            .HasKey(mr => new {mr.MovieId, mr.RatingId, mr.UserId});
+            .HasKey(mr => new {mr.Id});
 
             modelBuilder.Entity<MovieRating>()
             .HasOne(mr => mr.Rating)
