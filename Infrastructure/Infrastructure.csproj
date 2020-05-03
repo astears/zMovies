@@ -4,6 +4,13 @@
     <RootNamespace>zMovies.Infrastructure</RootNamespace>
     <AssemblyName>zMovies.Infrastructure</AssemblyName>
   </PropertyGroup>
+  <Target Name="ChangeAliasesOfStrongNameAssemblies" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'MySqlConnector'">
+        <Aliases>MySqlConnectorAlias</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.20" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
