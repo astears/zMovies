@@ -23,16 +23,18 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
     }
     public async Task<MovieCollection> Add(MovieCollection movieCollection)
     {
-      var id = 0;
+      int id = 0;
       string sql = @"
         INSERT INTO `MovieDB`.`MovieCollections` (`Id`, `Name`, `Description`, `UserId`) VALUES (@Id, @Name, @Description, @UserId);
+        SELECT LAST_INSERT_ID();
       ";
 
       using(var conn = GetConnection())
       {
-        await conn.ExecuteAsync(sql, new {Id = movieCollection.Id, Name = movieCollection.Name, Description = movieCollection.Description, UserId = movieCollection.User.Id});
+        id = await conn.ExecuteScalarAsync<int>(sql, new {Id = movieCollection.Id, Name = movieCollection.Name, Description = movieCollection.Description, UserId = movieCollection.User.Id});
       }
-
+      
+      movieCollection.Id = id;
       return movieCollection;
     }
     public async Task<bool> CollectionNameExists(MovieCollection collection)
