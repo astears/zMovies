@@ -33,10 +33,42 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
       {
         id = await conn.ExecuteScalarAsync<int>(sql, new {Id = movieCollection.Id, Name = movieCollection.Name, Description = movieCollection.Description, UserId = movieCollection.User.Id});
       }
-      
+
       movieCollection.Id = id;
       return movieCollection;
     }
+
+    public async Task<MovieCollection> Update(MovieCollection movieCollection)
+    {
+      string sql = @"
+        UPDATE MovieCollections
+        SET `Name` = @Name, Description = @Description, UserId = @UserId
+        WHERE Id = @Id;
+      ";
+
+      using(var conn = GetConnection())
+      {
+        await conn.ExecuteAsync(sql, new {Id = movieCollection.Id, Name = movieCollection.Name, Description = movieCollection.Description, UserId = movieCollection.User.Id});
+      }
+
+      return movieCollection;
+    }
+
+    public async Task<bool> Delete(MovieCollection movieCollection)
+    {
+      string sql = @"
+        DELETE FROM MovieCollections
+        WHERE Id = @Id;
+      ";
+
+      using(var conn = GetConnection())
+      {
+        await conn.ExecuteAsync(sql, new {Id = movieCollection.Id});
+      }
+
+      return true;
+    }
+
     public async Task<bool> CollectionNameExists(MovieCollection collection)
     {
       string sql = @"
@@ -93,18 +125,21 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
       MovieCollection movieCollection = null;
 
       string sql = @"
-        SELECT `Name`, `Description`, `UserId`, `Id`, `MovieCollectionId`, `MovieId`
+        SELECT `Name`, `Description`, `UserId`, `c`.`Id`, `MovieCollectionId`, `MovieId`,`u`.`Id`, `FirstName`, `LastName`, `Username`
         FROM MovieCollections as c
         LEFT JOIN MovieCollectionItems as i
           ON c.Id = i.MovieCollectionId
+        JOIN Users as u
+          ON c.UserId = u.Id
         WHERE c.Id = @id;";
 
       using (var conn = GetConnection())
       {
-          var queryResults = await conn.QueryAsync<MovieCollection, MovieCollectionItem, MovieCollection>(sql,
-            (currentMovieCollection, movieItem) => {
+          var queryResults = await conn.QueryAsync<MovieCollection, MovieCollectionItem, User, MovieCollection>(sql,
+            (currentMovieCollection, movieItem, user) => {
               if (movieCollection == null) 
               { 
+                currentMovieCollection.User = user;
                 movieCollection = currentMovieCollection;
               }
               if (movieItem != null)
@@ -112,7 +147,7 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
                 movieCollection.MovieCollectionItems.Add(movieItem);
               }
               return null;
-            }, new {id = id}, splitOn: "MovieCollectionId");
+            }, new {id = id}, splitOn: "MovieCollectionId, Id");
       }
 
       return movieCollection;

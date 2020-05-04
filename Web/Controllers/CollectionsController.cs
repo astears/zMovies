@@ -111,7 +111,7 @@ namespace zMovies.Web.Controllers
 
       return CreatedAtAction("GetCollectionById", new {collectionId = response.Id }, response);
     }
-    /*
+    
     /// <summary>
     /// Updates a movie collection
     /// </summary>
@@ -137,7 +137,7 @@ namespace zMovies.Web.Controllers
 
       return Ok(response);
     }
-
+    
     /// <summary>
     /// Deletes a movie collection
     /// </summary>
@@ -160,6 +160,7 @@ namespace zMovies.Web.Controllers
       return NoContent();
     }
 
+    /*
     /// <summary>
     /// Adds a movie to a movie collection
     /// </summary>
