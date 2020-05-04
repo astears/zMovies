@@ -77,7 +77,7 @@ namespace zMovies.Web.Controllers
 
       return Ok(response);
     }
-    /*
+    
     /// <summary>
     /// Creates a movie collection
     /// </summary>
@@ -111,7 +111,7 @@ namespace zMovies.Web.Controllers
 
       return CreatedAtAction("GetCollectionById", new {collectionId = response.Id }, response);
     }
-
+    /*
     /// <summary>
     /// Updates a movie collection
     /// </summary>

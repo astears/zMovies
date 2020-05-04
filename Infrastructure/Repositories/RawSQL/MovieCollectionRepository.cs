@@ -21,6 +21,20 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
     {
       this.config = config;
     }
+    public async Task<MovieCollection> Add(MovieCollection movieCollection)
+    {
+      var id = 0;
+      string sql = @"
+        INSERT INTO `MovieDB`.`MovieCollections` (`Id`, `Name`, `Description`, `UserId`) VALUES (@Id, @Name, @Description, @UserId);
+      ";
+
+      using(var conn = GetConnection())
+      {
+        await conn.ExecuteAsync(sql, new {Id = movieCollection.Id, Name = movieCollection.Name, Description = movieCollection.Description, UserId = movieCollection.User.Id});
+      }
+
+      return movieCollection;
+    }
     public async Task<bool> CollectionNameExists(MovieCollection collection)
     {
       string sql = @"
@@ -30,7 +44,7 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
 
       using (var conn = GetConnection())
       {
-          var queryResult = await conn.QueryFirstOrDefaultAsync<MovieCollection>(sql, new {UserId = collection.Id, Name = collection.Name});
+          var queryResult = await conn.QueryFirstOrDefaultAsync<MovieCollection>(sql, new {UserId = collection.User.Id, Name = collection.Name});
           return queryResult == null ? false : true;
       }
     }
