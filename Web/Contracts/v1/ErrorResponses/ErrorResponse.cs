@@ -1,4 +1,4 @@
-namespace zMovies.Web.Contracts.v1.ErrorResponses
+namespace zMovies.Web.Contracts.V1.ErrorResponses
 {
     public class ErrorResponse
     {

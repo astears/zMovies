@@ -7,7 +7,6 @@ using zMovies.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using Dapper;
-using System.Linq;
 
 namespace zMovies.Infrastructure.Repositories.RawSQL
 {

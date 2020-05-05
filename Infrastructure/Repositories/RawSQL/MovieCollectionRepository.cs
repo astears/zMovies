@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace zMovies.Infrastructure.Repositories.RawSQL
 {
-  public class MovieCollectionRepository : /*GenericRepository<MovieCollection>,*/ IMovieCollectionRepository
+  public class MovieCollectionRepository : IMovieCollectionRepository
   {
     private readonly IConfiguration config;
 

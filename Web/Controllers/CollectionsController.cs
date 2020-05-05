@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,27 +8,27 @@ using zMovies.Core.Interfaces;
 using zMovies.Core.Entities;
 using zMovies.Contracts.V1;
 using Microsoft.AspNetCore.Http;
-using zMovies.Web.Contracts.v1.ErrorResponses;
+using zMovies.Web.Contracts.V1.ErrorResponses;
 
 namespace zMovies.Web.Controllers
 {
   [ApiController]
   [Produces("application/json")]
   [Consumes("application/json")]
-  public class CollectionsController : ControllerBase
+  public class MovieCollectionsController : ControllerBase
   {
 
-    private readonly IMovieCollectionRepository collections;
+    private readonly IMovieCollectionRepository movieCollections;
     private readonly IUserRepository users;
     private readonly IMovieCollectionItemRepository movieCollectionItems;
     private readonly IMapper mapper;
 
-    public CollectionsController(IMovieCollectionRepository collections, IMovieCollectionItemRepository movieCollectionItems, IUserRepository users, IMapper mapper)
+    public MovieCollectionsController(IMovieCollectionRepository movieCollections, IMovieCollectionItemRepository movieCollectionItems, IUserRepository users, IMapper mapper)
     {
       this.movieCollectionItems = movieCollectionItems;
       this.users = users;
       this.mapper = mapper;
-      this.collections = collections;
+      this.movieCollections = movieCollections;
     }
     
     /// <summary>
@@ -49,7 +48,7 @@ namespace zMovies.Web.Controllers
       if (user == null)
         return NotFound(new ErrorResponse { Error = "Invalid uid"});
 
-      IEnumerable<MovieCollection> allCollections = await this.collections.GetAllByUserId(uid);
+      IEnumerable<MovieCollection> allCollections = await this.movieCollections.GetAllByUserId(uid);
 
       IEnumerable<MovieCollectionResponse> response = this.mapper.Map<IEnumerable<MovieCollectionResponse>>(allCollections);
 
@@ -68,7 +67,7 @@ namespace zMovies.Web.Controllers
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCollectionById([FromRoute] int collectionId)
     {
-      MovieCollection foundCollection = await this.collections.GetById(collectionId);
+      MovieCollection foundCollection = await this.movieCollections.GetById(collectionId);
 
       if (foundCollection == null)
         return NotFound(new ErrorResponse { Error = "Invalid collectionId"});
@@ -103,9 +102,9 @@ namespace zMovies.Web.Controllers
         Description = request.Description
       };
 
-      if ((await this.collections.CollectionNameExists(collectionToAdd))) { return Conflict(new ErrorResponse { Error = "Collection name already in use." }); }
+      if ((await this.movieCollections.CollectionNameExists(collectionToAdd))) { return Conflict(new ErrorResponse { Error = "Collection name already in use." }); }
 
-      MovieCollection addedCollection = await this.collections.Add(collectionToAdd);
+      MovieCollection addedCollection = await this.movieCollections.Add(collectionToAdd);
 
       MovieCollectionResponse response = this.mapper.Map<MovieCollectionResponse>(addedCollection);
 
@@ -124,14 +123,14 @@ namespace zMovies.Web.Controllers
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateCollection([FromBody] UpdateCollectionRequest request)
     {
-      MovieCollection collectionToUpdate = await this.collections.GetById(request.Id);
+      MovieCollection collectionToUpdate = await this.movieCollections.GetById(request.Id);
 
       if (collectionToUpdate == null) { return NotFound(new ErrorResponse { Error = "Invalid collection Id." }); }
 
       collectionToUpdate.Name = request.Name;
       collectionToUpdate.Description = request.Description;
 
-      MovieCollection movieCollection = await this.collections.Update(collectionToUpdate);
+      MovieCollection movieCollection = await this.movieCollections.Update(collectionToUpdate);
       
       MovieCollectionResponse response = this.mapper.Map<MovieCollectionResponse>(movieCollection);
 
@@ -150,12 +149,12 @@ namespace zMovies.Web.Controllers
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteCollection([FromRoute] int collectionId)
     {
-      var collection = await this.collections.GetById(collectionId);
+      var collection = await this.movieCollections.GetById(collectionId);
       
       if (collection == null)
         return NotFound(new ErrorResponse { Error = "Invalid collectionId"});
 
-      await this.collections.Delete(collection);
+      await this.movieCollections.Delete(collection);
 
       return NoContent();
     }
@@ -175,7 +174,7 @@ namespace zMovies.Web.Controllers
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> AddMovieToCollection([FromBody] AddMovieToCollectionRequest request)
     {
-      MovieCollection collection = await this.collections.GetById(request.collectionId);
+      MovieCollection collection = await this.movieCollections.GetById(request.collectionId);
 
       if (collection == null) { return NotFound(new ErrorResponse { Error = "Invalid collection id" }); }
 

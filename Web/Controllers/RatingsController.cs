@@ -8,7 +8,7 @@ using zMovies.Core.Entities;
 using zMovies.Core.Interfaces;
 using zMovies.Contracts.V1;
 using Microsoft.AspNetCore.Http;
-using zMovies.Web.Contracts.v1.ErrorResponses;
+using zMovies.Web.Contracts.V1.ErrorResponses;
 
 namespace Movies.Web.Controllers
 {

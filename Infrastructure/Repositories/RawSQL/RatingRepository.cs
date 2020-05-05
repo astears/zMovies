@@ -1,13 +1,11 @@
 extern alias MySqlConnectorAlias;
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using zMovies.Core.Entities;
 using zMovies.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using Dapper;
-using System.Linq;
 
 namespace zMovies.Infrastructure.Repositories.RawSQL
 {
@@ -18,26 +16,6 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
         public RatingRepository(IConfiguration config)
         {
             this.config = config;
-        }
-
-        public Task<Rating> Add(Rating entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IEnumerable<Rating>> AddRange(IEnumerable<Rating> entities)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<bool> Delete(Rating entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IEnumerable<Rating>> GetAll()
-        {
-            throw new System.NotImplementedException();
         }
 
         public async Task<Rating> GetByValue(int value)
@@ -56,7 +34,12 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
             return rating;
         }
 
-        public Task Save()
+        public Task<Rating> Add(Rating entity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> Delete(Rating entity)
         {
             throw new System.NotImplementedException();
         }

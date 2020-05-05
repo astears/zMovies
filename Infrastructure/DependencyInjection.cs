@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using zMovies.Infrastructure.Data;
-using zMovies.Infrastructure.Repositories;
+using zMovies.Infrastructure.Repositories.RawSQL;
 using zMovies.Core.Interfaces;
 
 namespace zMovies.Infrastructure
@@ -11,16 +11,17 @@ namespace zMovies.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<DataContext>(options =>
+            /*services.AddDbContext<DataContext>(options =>
                     options.UseMySql(
                         configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)));
+                        b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)));*/
 
-            services.AddTransient<IMovieCollectionRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieCollectionRepository>();
-            services.AddTransient<IUserRepository, zMovies.Infrastructure.Repositories.RawSQL.UserRepository>();
-            services.AddTransient<IMovieCollectionItemRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieCollectionItemRepository>();
-            services.AddTransient<IMovieRatingRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieRatingRepository>();
-            services.AddTransient<IRatingRepository, zMovies.Infrastructure.Repositories.RawSQL.RatingRepository>();
+            // Adding RawSQL implementations of repositories
+            services.AddTransient<IMovieCollectionRepository, MovieCollectionRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IMovieCollectionItemRepository, MovieCollectionItemRepository>();
+            services.AddTransient<IMovieRatingRepository, MovieRatingRepository>();
+            services.AddTransient<IRatingRepository, RatingRepository>();
 
             return services;
         }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,33 +7,13 @@ using zMovies.Core.Interfaces;
 
 namespace zMovies.Infrastructure.Repositories.RawSQL
 {
-  public class UserRepository : /*GenericRepository<User>,*/ IUserRepository
+  public class UserRepository : IUserRepository
   { 
     private readonly IConfiguration config;
 
     public UserRepository(IConfiguration config)
     {
       this.config = config;
-    }
-
-    public Task<User> Add(User entity)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public Task<IEnumerable<User>> AddRange(IEnumerable<User> entities)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public Task<bool> Delete(User entity)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public Task<IEnumerable<User>> GetAll()
-    {
-      throw new System.NotImplementedException();
     }
 
     public async Task<User> GetById(int uid)
@@ -54,7 +33,12 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
       return user;
     }
 
-    public Task Save()
+    public Task<User> Add(User entity)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<bool> Delete(User entity)
     {
       throw new System.NotImplementedException();
     }

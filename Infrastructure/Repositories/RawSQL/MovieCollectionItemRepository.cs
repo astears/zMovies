@@ -4,7 +4,6 @@ using zMovies.Core.Interfaces;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Linq;
 
 namespace zMovies.Infrastructure.Repositories.RawSQL
 {
@@ -76,6 +75,11 @@ namespace zMovies.Infrastructure.Repositories.RawSQL
       }
 
       return item;
+    }
+
+    public Task<MovieCollectionItem> Update(MovieCollectionItem entity)
+    {
+        throw new System.NotImplementedException();
     }
 
     private IDbConnection GetConnection()
