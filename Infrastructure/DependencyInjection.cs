@@ -11,14 +11,14 @@ namespace zMovies.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            /*services.AddDbContext<DataContext>(options =>
+            services.AddDbContext<DataContext>(options =>
                     options.UseMySql(
                         configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)));*/
+                        b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)));
 
             services.AddTransient<IMovieCollectionRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieCollectionRepository>();
             services.AddTransient<IUserRepository, zMovies.Infrastructure.Repositories.RawSQL.UserRepository>();
-            services.AddTransient<IMovieCollectionItemRepository, MovieCollectionItemRepository>();
+            services.AddTransient<IMovieCollectionItemRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieCollectionItemRepository>();
             services.AddTransient<IMovieRatingRepository, MovieRatingRepository>();
             services.AddTransient<IRatingRepository, RatingRepository>();
 

@@ -2,29 +2,85 @@ using System.Threading.Tasks;
 using zMovies.Core.Entities;
 using zMovies.Core.Interfaces;
 using Dapper;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Linq;
 
 namespace zMovies.Infrastructure.Repositories.RawSQL
 {
   public class MovieCollectionItemRepository : IMovieCollectionItemRepository
   {
-    public Task<MovieCollectionItem> Add(MovieCollectionItem movieCollectionItem)
+    private readonly IConfiguration config;
+
+    public MovieCollectionItemRepository(IConfiguration config)
     {
-      throw new System.NotImplementedException();
+        this.config = config;
     }
 
-    public Task<bool> Delete(MovieCollectionItem movieCollectionItem)
+    public async Task<MovieCollectionItem> Add(MovieCollectionItem movieCollectionItem)
     {
-      throw new System.NotImplementedException();
+      string sql = @"
+        INSERT INTO `MovieDB`.`MovieCollectionItems` (`MovieId`, `MovieCollectionId`) VALUES (@MovieId, @MovieCollectionId);
+      ";
+
+      using(var conn = GetConnection())
+      {
+        await conn.ExecuteAsync(sql, movieCollectionItem);
+      }
+
+      return movieCollectionItem;
+
     }
 
-    public Task<bool> Exists(int movieId, int collectionId)
+    public async Task<bool> Delete(MovieCollectionItem movieCollectionItem)
     {
-      throw new System.NotImplementedException();
+      string sql = @"
+        DELETE FROM `MovieDB`.`MovieCollectionItems` WHERE `MovieId` = @MovieId AND `MovieCollectionId`= @MovieCollectionId;
+      ";
+
+       using(var conn = GetConnection())
+      {
+        await conn.ExecuteAsync(sql, movieCollectionItem);
+      }
+
+      return true;
     }
 
-    public Task<MovieCollectionItem> GetById(int movieId, int collectionId)
+    public async Task<bool> Exists(int movieId, int movieCollectionId)
     {
-      throw new System.NotImplementedException();
+      MovieCollectionItem item;
+
+      string sql = @"
+        SELECT `MovieId`, `MovieCollectionId` FROM `MovieDB`.`MovieCollectionItems` WHERE `MovieId` = @MovieId AND `MovieCollectionId`= @MovieCollectionId;
+      ";
+
+      using(var conn = GetConnection())
+      {
+        item = await conn.QueryFirstOrDefaultAsync<MovieCollectionItem>(sql, new {MovieId = movieId, MovieCollectionId = movieCollectionId});
+      }
+
+      return item == null ? false : true;
+    }
+
+    public async Task<MovieCollectionItem> GetById(int movieId, int movieCollectionId)
+    {
+      MovieCollectionItem item;
+
+      string sql = @"
+        SELECT `MovieId`, `MovieCollectionId` FROM `MovieDB`.`MovieCollectionItems` WHERE `MovieId` = @MovieId AND `MovieCollectionId`= @MovieCollectionId;
+      ";
+
+      using(var conn = GetConnection())
+      {
+        item = await conn.QueryFirstOrDefaultAsync<MovieCollectionItem>(sql, new {MovieId = movieId, MovieCollectionId = movieCollectionId});
+      }
+
+      return item;
+    }
+
+    private IDbConnection GetConnection()
+    {
+        return new MySql.Data.MySqlClient.MySqlConnection(this.config.GetConnectionString("DefaultConnection"));
     }
   }
 }
