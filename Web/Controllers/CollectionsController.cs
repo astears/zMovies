@@ -21,12 +21,12 @@ namespace zMovies.Web.Controllers
 
     private readonly IMovieCollectionRepository collections;
     private readonly IUserRepository users;
-    //private readonly IMovieCollectionItemRepository movieCollectionItems;
+    private readonly IMovieCollectionItemRepository movieCollectionItems;
     private readonly IMapper mapper;
 
-    public CollectionsController(IMovieCollectionRepository collections, /*IMovieCollectionItemRepository movieCollectionItems,*/ IUserRepository users, IMapper mapper)
+    public CollectionsController(IMovieCollectionRepository collections, IMovieCollectionItemRepository movieCollectionItems, IUserRepository users, IMapper mapper)
     {
-      //this.movieCollectionItems = movieCollectionItems;
+      this.movieCollectionItems = movieCollectionItems;
       this.users = users;
       this.mapper = mapper;
       this.collections = collections;
@@ -160,7 +160,7 @@ namespace zMovies.Web.Controllers
       return NoContent();
     }
 
-    /*
+    
     /// <summary>
     /// Adds a movie to a movie collection
     /// </summary>
@@ -215,6 +215,6 @@ namespace zMovies.Web.Controllers
         
       await this.movieCollectionItems.Delete(item);
       return NoContent();
-    }*/
+    }
   }
 }
