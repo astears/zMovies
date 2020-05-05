@@ -19,8 +19,8 @@ namespace zMovies.Infrastructure
             services.AddTransient<IMovieCollectionRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieCollectionRepository>();
             services.AddTransient<IUserRepository, zMovies.Infrastructure.Repositories.RawSQL.UserRepository>();
             services.AddTransient<IMovieCollectionItemRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieCollectionItemRepository>();
-            services.AddTransient<IMovieRatingRepository, MovieRatingRepository>();
-            services.AddTransient<IRatingRepository, RatingRepository>();
+            services.AddTransient<IMovieRatingRepository, zMovies.Infrastructure.Repositories.RawSQL.MovieRatingRepository>();
+            services.AddTransient<IRatingRepository, zMovies.Infrastructure.Repositories.RawSQL.RatingRepository>();
 
             return services;
         }

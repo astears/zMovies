@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using zMovies.Core.Entities;
 using zMovies.Core.Interfaces;
-using zMovies.Infrastructure.Repositories;
-using MySql.Data.MySqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using Dapper;
